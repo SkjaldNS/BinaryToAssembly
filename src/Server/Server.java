@@ -14,7 +14,7 @@ public class Server implements Runnable{
     public void run() {
         System.out.println("Server started");
         try {
-            ServerSocket serverSocket = new ServerSocket(9424);
+            ServerSocket serverSocket = new ServerSocket(9427);
             while(true) {
                 System.out.println("Waiting for connection...");
                 Socket socket = serverSocket.accept();
@@ -23,7 +23,9 @@ public class Server implements Runnable{
                 String message = reader.readLine();
                 System.out.println("Received: " + message);
                 String data = message.substring(2);
+                System.out.println(data);
                 String converted = Binary.convertBinaryToAssembly(data);
+                System.out.println(converted);
                 OutputStream output = socket.getOutputStream();
                 PrintWriter writer = new PrintWriter(output, true);
                 writer.println(converted);

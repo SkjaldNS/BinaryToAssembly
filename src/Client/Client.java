@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class Client {
     public static void main(String[] args) {
-        int port = 9424;
+        int port = 9427;
         String host = "localhost";
         try {
             Socket s = new Socket(host, port);
@@ -26,8 +26,9 @@ public class Client {
                         }
                         PrintWriter output = new PrintWriter(s.getOutputStream(), true);
                         output.println(binary);
-                        //int read = 0;
-                        //ObjectInputStream in = new ObjectInputStream(s.getInputStream());
+                        int read = 0;
+                        ObjectInputStream in = new ObjectInputStream(s.getInputStream());
+                        //String message = (String) in.readObject();
                         //while((read = s.getInputStream().read()) > -1) {
                         //    String message = (String) in.readObject();
                         //    System.out.println("Message: " + message);
