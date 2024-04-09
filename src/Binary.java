@@ -37,10 +37,10 @@ public class Binary {
             case "0001" : {
                 result = "ADD";
                 if(isImmediate(binary)) {
-                    result += " DR: " + convertBinaryToRegister(extractSubString(binary, 4, 6)) + " SR1: " + convertBinaryToRegister(extractSubString(binary, 7, 9)) + " IMM5: " + convertBinaryToOffset(extractSubString(binary, 11, 15));
+                    result += " DR: " + convertBinaryToRegister(extractSubString(binary, 4, 6)) + " SR1: " + convertBinaryToRegister(extractSubString(binary, 7, 9)) + " IMM5: " + convertBinaryToOffset(extractSubString(binary, 11, 15)) +"("+convertBinaryToRegister(extractSubString(binary, 4, 6)) + "<- " + convertBinaryToRegister(extractSubString(binary, 7, 9)) + " + (" + convertBinaryToOffset(extractSubString(binary, 11, 15)) + "))";
                 }
                 else if (!isImmediate(binary) && isExpected(binary, 10, 12, 0)){
-                    result += " DR: " + convertBinaryToRegister(extractSubString(binary, 4, 6)) + " SR1: " + convertBinaryToRegister(extractSubString(binary, 7, 9)) + " SR2: " + convertBinaryToRegister(extractSubString(binary, 13, 15));
+                    result += " DR: " + convertBinaryToRegister(extractSubString(binary, 4, 6)) + " SR1: " + convertBinaryToRegister(extractSubString(binary, 7, 9)) + " SR2: " + convertBinaryToRegister(extractSubString(binary, 13, 15)) + "("+convertBinaryToRegister(extractSubString(binary, 4, 6)) + "<- " + convertBinaryToRegister(extractSubString(binary, 7, 9)) + " + (" + convertBinaryToRegister(extractSubString(binary, 13, 15)) + "))";
                 }
                 else {
                     result = "INVALID ADD";
@@ -50,10 +50,10 @@ public class Binary {
             case "0101" : {
                 result = "AND";
                 if(isImmediate(binary)) {
-                    result += " DR: " + convertBinaryToRegister(extractSubString(binary, 4, 6)) + " SR1: " + convertBinaryToRegister(extractSubString(binary, 7, 9)) + " IMM5: " + convertBinaryToOffset(extractSubString(binary, 11, 15));
+                    result += " DR: " + convertBinaryToRegister(extractSubString(binary, 4, 6)) + " SR1: " + convertBinaryToRegister(extractSubString(binary, 7, 9)) + " IMM5: " + convertBinaryToOffset(extractSubString(binary, 11, 15)) + " ("+convertBinaryToRegister(extractSubString(binary, 4, 6)) + " <- " + convertBinaryToRegister(extractSubString(binary, 7, 9)) + " & (" + convertBinaryToOffset(extractSubString(binary, 11, 15)) + "))";
                 }
                 else if (!isImmediate(binary) && isExpected(binary,11,12,0)){
-                    result += " DR: " + convertBinaryToRegister(extractSubString(binary, 4, 6)) + " SR1: " + convertBinaryToRegister(extractSubString(binary, 7, 9)) + " SR2: " + convertBinaryToRegister(extractSubString(binary, 13, 15));
+                    result += " DR: " + convertBinaryToRegister(extractSubString(binary, 4, 6)) + " SR1: " + convertBinaryToRegister(extractSubString(binary, 7, 9)) + " SR2: " + convertBinaryToRegister(extractSubString(binary, 13, 15)) + (" ("+convertBinaryToRegister(extractSubString(binary, 4, 6)) + " <- " + convertBinaryToRegister(extractSubString(binary, 7, 9)) + " & (" + convertBinaryToRegister(extractSubString(binary, 13, 15)) + "))");
                 }
                 else {
                     result = "INVALID AND";
@@ -61,12 +61,12 @@ public class Binary {
                 break;
             }
             case "0000" : {
-                result = "BR"+ convertBinaryToNZP(extractSubString(binary, 4, 6)) + " PCoffset9: " + convertBinaryToOffset(extractSubString(binary, 7, 15));;
+                result = "BR"+ convertBinaryToNZP(extractSubString(binary, 4, 6)) + " PCoffset9: " + convertBinaryToOffset(extractSubString(binary, 7, 15)) + (" (BR"+ convertBinaryToNZP(extractSubString(binary, 4, 6)) + " to PC + (" + convertBinaryToOffset(extractSubString(binary, 7, 15)))+("))");;
                 break;
             }
             case "1100" : {
                 if (isExpected(binary, 4,6,0) && isExpected(binary, 10,15,0)) {
-                    result = "JMP BaseR: " + convertBinaryToRegister(extractSubString(binary, 7, 9));
+                    result = "JMP BaseR: " + convertBinaryToRegister(extractSubString(binary, 7, 9)) + " (JMP to " + convertBinaryToRegister(extractSubString(binary, 7, 9));
                 }
                 else if (isExpected(binary, 4,6,1) && isExpected(binary, 10,15,1)) {
                     result = "RET";
@@ -78,10 +78,10 @@ public class Binary {
             }
             case "0100" : {
                 if (binary.charAt(4) == '0') {
-                    result = "JSR PCoffset11: " + convertBinaryToOffset(extractSubString(binary, 5, 15));
+                    result = "JSR PCoffset11: " + convertBinaryToOffset(extractSubString(binary, 5, 15)) +(" (JSR to PC + (" + convertBinaryToOffset(extractSubString(binary, 5, 15)) + "))");
                 }
                 else if (isExpected(binary,4,6,0) && isExpected(binary,10,15,0)) {
-                    result = "JSRR BaseR: " + convertBinaryToRegister(extractSubString(binary, 7, 9));
+                    result = "JSRR BaseR: " + convertBinaryToRegister(extractSubString(binary, 7, 9))+ (" (JSRR to " + convertBinaryToRegister(extractSubString(binary, 7, 9)) + ")");
                 }
                 else {
                     result = "INVALID JSR/JSRR";
@@ -89,27 +89,26 @@ public class Binary {
                 break;
             }
             case "0010" : {
-                result = "LD DR: " + convertBinaryToRegister(extractSubString(binary, 4, 6)) + " PCoffset9: " + convertBinaryToOffset(extractSubString(binary, 7, 15));
+                result = "LD DR: " + convertBinaryToRegister(extractSubString(binary, 4, 6)) + " PCoffset9: " + convertBinaryToOffset(extractSubString(binary, 7, 15)) + (" ("+convertBinaryToRegister(extractSubString(binary, 4, 6))+ " <- M["+convertBinaryToOffset(extractSubString(binary, 7, 15))+"])");
                 break;
             }
             case "1010" : {
-                result = "LDI DR: " + convertBinaryToRegister(extractSubString(binary, 4, 6)) + " PCoffset9: " + convertBinaryToOffset(extractSubString(binary, 7, 15));
+                result = "LDI DR: " + convertBinaryToRegister(extractSubString(binary, 4, 6)) + " PCoffset9: " + convertBinaryToOffset(extractSubString(binary, 7, 15)) + (" ("+convertBinaryToRegister(extractSubString(binary, 4, 6))+ " <- M[M["+convertBinaryToOffset(extractSubString(binary, 7, 15))+"]])");
                 break;
             }
             case "0110" : {
-                result = "LDR DR: " + convertBinaryToRegister(extractSubString(binary, 4, 6)) + " BaseR: " + convertBinaryToRegister(extractSubString(binary, 7, 9)) + " offset6: " + convertBinaryToOffset(extractSubString(binary, 10, 15));
+                result = "LDR DR: " + convertBinaryToRegister(extractSubString(binary, 4, 6)) + " BaseR: " + convertBinaryToRegister(extractSubString(binary, 7, 9)) + " offset6: " + convertBinaryToOffset(extractSubString(binary, 10, 15)) +" ("+convertBinaryToRegister(extractSubString(binary, 4, 6)) + " <- M["+convertBinaryToRegister(extractSubString(binary, 7, 9)) + " + " + convertBinaryToOffset(extractSubString(binary, 10, 15)) + "])";
                 break;
             }
             case "1110" : {
-                result = "LEA DR: " + convertBinaryToRegister(extractSubString(binary, 4, 6)) + " PCoffset9: " + convertBinaryToOffset(extractSubString(binary, 7, 15));
+                result = "LEA DR: " + convertBinaryToRegister(extractSubString(binary, 4, 6)) + " PCoffset9: " + convertBinaryToOffset(extractSubString(binary, 7, 15)) + "("+convertBinaryToRegister(extractSubString(binary, 4, 6)) + " <- PC + (" + convertBinaryToOffset(extractSubString(binary, 7, 15)) + "))";
                 break;
             }
             case "1001" : {
                 if(isExpected(binary,10,15,1)){
-                    result = "NOT DR: " + convertBinaryToRegister(extractSubString(binary, 4, 6)) + " SR: " + convertBinaryToRegister(extractSubString(binary, 7, 9));
+                    result = "NOT DR: " + convertBinaryToRegister(extractSubString(binary, 4, 6)) + " SR: " + convertBinaryToRegister(extractSubString(binary, 7, 9)) + " ("+convertBinaryToRegister(extractSubString(binary, 4, 6)) + " <- NOT " + convertBinaryToRegister(extractSubString(binary, 7, 9)) + ")";
                 }
                 else {
-                    System.out.println(binary.charAt(10));
                     result = "INVALID NOT";
                 }
                 break;
@@ -124,15 +123,15 @@ public class Binary {
                 break;
             }
             case "0011" : {
-                result = "ST SR: " + convertBinaryToRegister(extractSubString(binary, 4, 6)) + " PCoffset9: " + convertBinaryToOffset(extractSubString(binary, 7, 15));
+                result = "ST SR: " + convertBinaryToRegister(extractSubString(binary, 4, 6)) + " PCoffset9: " + convertBinaryToOffset(extractSubString(binary, 7, 15)) + " (M["+convertBinaryToOffset(extractSubString(binary, 7, 15))+"] <- " + convertBinaryToRegister(extractSubString(binary, 4, 6) + ")");
                 break;
             }
             case "1011" : {
-                result = "STI SR: " + convertBinaryToRegister(extractSubString(binary, 4, 6)) + " PCoffset9: " + convertBinaryToOffset(extractSubString(binary, 7, 15));
+                result = "STI SR: " + convertBinaryToRegister(extractSubString(binary, 4, 6)) + " PCoffset9: " + convertBinaryToOffset(extractSubString(binary, 7, 15)) + " (M[M["+convertBinaryToOffset(extractSubString(binary, 7, 15))+"]] <- " + convertBinaryToRegister(extractSubString(binary, 4, 6) + ")");
                 break;
             }
             case "0111" : {
-                result = "STR SR: " + convertBinaryToRegister(extractSubString(binary, 4, 6)) + " BaseR: " + convertBinaryToRegister(extractSubString(binary, 7, 9)) + " offset6: " + convertBinaryToOffset(extractSubString(binary, 10, 15));
+                result = "STR SR: " + convertBinaryToRegister(extractSubString(binary, 4, 6)) + " BaseR: " + convertBinaryToRegister(extractSubString(binary, 7, 9)) + " offset6: " + convertBinaryToOffset(extractSubString(binary, 10, 15)) + " (M["+convertBinaryToRegister(extractSubString(binary, 7, 9)) + " + " + convertBinaryToOffset(extractSubString(binary, 10, 15)) + "] <- " + convertBinaryToRegister(extractSubString(binary, 4, 6)) + ")";
                 break;
             }
             case "1111" : {

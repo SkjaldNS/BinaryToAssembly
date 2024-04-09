@@ -12,7 +12,7 @@ public class Main {
                     System.out.println("Enter binary instruction: ");
                     String binary = scanner.next();
                     if(!Binary.validateBinary(binary)) {
-                        System.out.println("Invalid binary");
+                        System.out.println("Invalid binary string. Please enter a valid 16 digit binary string.");
                         continue;
                     }
                     System.out.println(Binary.convertBinaryToAssembly(binary));
@@ -21,7 +21,7 @@ public class Main {
                     String filename = scanner.next();
                     String[] data = FileUtils.loadFile(filename);
                     if(!Binary.validateBinary(data)) {
-                        System.out.println("Invalid binary");
+                        System.out.println("File contains invalid binary string. Please ensure that each line contains a valid 16 digit binary string.");
                         continue;
                     }
                     String resultSet = "";
