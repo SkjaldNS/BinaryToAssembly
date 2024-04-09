@@ -1,0 +1,10 @@
+LEA DR: R4 PCoffset9: 255(R4 <- PC + (255))
+ADD DR: R2 SR1: R0 IMM5: 0(R2<- R0 + (0))
+NOT DR: R3 SR: R1 (R3 <- NOT R1)
+ADD DR: R3 SR1: R3 IMM5: 1(R3<- R3 + (1))
+STR SR: R2 BaseR: R4 offset6: 0 (M[R4 + 0] <- R2)
+ADD DR: R4 SR1: R4 IMM5: 1(R4<- R4 + (1))
+ADD DR: R2 SR1: R2 SR2: R0(R2<- R2 + (R0))
+ADD DR: R5 SR1: R3 SR2: R2(R5<- R3 + (R2))
+BRn PCoffset9: -5 (BRn to PC + (-5))
+TRAP x25
