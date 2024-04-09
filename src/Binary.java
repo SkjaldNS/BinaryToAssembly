@@ -56,7 +56,7 @@ public class Binary {
                     result += " DR: " + convertBinaryToRegister(extractSubString(binary, 4, 6)) + " SR1: " + convertBinaryToRegister(extractSubString(binary, 7, 9)) + " SR2: " + convertBinaryToRegister(extractSubString(binary, 13, 15));
                 }
                 else {
-                    result = "INVALID BR";
+                    result = "INVALID AND";
                 }
                 break;
             }
@@ -107,13 +107,12 @@ public class Binary {
             case "1001" : {
                 if(isExpected(binary,10,15,1)){
                     result = "NOT DR: " + convertBinaryToRegister(extractSubString(binary, 4, 6)) + " SR: " + convertBinaryToRegister(extractSubString(binary, 7, 9));
-                    break;
                 }
                 else {
                     System.out.println(binary.charAt(10));
                     result = "INVALID NOT";
-                    break;
                 }
+                break;
             }
             case "1000" : {
                 if(isExpected(binary,4,15,0)){
@@ -125,7 +124,7 @@ public class Binary {
                 break;
             }
             case "0011" : {
-                result = "ST";
+                result = "ST SR: " + convertBinaryToRegister(extractSubString(binary, 4, 6)) + " PCoffset9: " + convertBinaryToOffset(extractSubString(binary, 7, 15));
                 break;
             }
             case "1011" : {
@@ -139,12 +138,11 @@ public class Binary {
             case "1111" : {
                 if(isExpected(binary,4,7,0)){
                     result = "TRAP " + convertBinaryToHexadecimal(extractSubString(binary, 8, 15));
-                    break;
                 }
                 else {
                     result = "INVALID TRAP";
-                    break;
                 }
+                break;
             }
             case "1101" : {
                 result = "RESERVED";
@@ -248,11 +246,15 @@ public class Binary {
     static String convertBinaryToOffset(String binary) {
         int value = 0;
         if (binary.charAt(0) == '1') {
-            value = (int) (-Math.pow(2, (binary.length() - 1)));
+            value = (int) (-Math.pow(2, (binary.length()-1)));
         }
-        for (int i = binary.length()-1; i > 0; i--) {
+        if(binary.charAt((binary.length()-1)) == '1') {
+            value += 1;
+
+        }
+        for (int i = binary.length()-2; i > 0; i--) {
             if (binary.charAt(i) == '1') {
-                value += (int) Math.pow(2, (binary.length() - i));
+                value += (int) Math.pow(2, binary.length()-i-1);
             }
         }
         return Integer.toString(value);
